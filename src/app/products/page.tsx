@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { ChevronDown, Grid3X3 } from "lucide-react";
 import ProductCard from "@/components/products/product-card";
 import FilterSidebar from "@/components/products/filter-sidebar";

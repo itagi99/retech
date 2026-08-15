@@ -8,9 +8,8 @@ export function getDb() {
   if (!_db) {
     const url = process.env.TURSO_DATABASE_URL;
     if (!url) {
-      throw new Error(
-        "TURSO_DATABASE_URL is not set. Add it in Vercel Environment Variables."
-      );
+      console.warn("TURSO_DATABASE_URL is not set. Database features will not work.");
+      return null as any;
     }
     const client = createClient({
       url,
@@ -23,6 +22,8 @@ export function getDb() {
 
 export const db = new Proxy({} as ReturnType<typeof drizzle>, {
   get(_, prop) {
-    return getDb()[prop];
+    const instance = getDb();
+    if (!instance) return undefined;
+    return (instance as any)[prop];
   },
 });

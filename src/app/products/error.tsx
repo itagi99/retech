@@ -17,9 +17,12 @@ export default function ProductsError({
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center px-4">
       <h2 className="text-2xl font-bold mb-2">Something went wrong</h2>
-      <p className="text-muted-foreground mb-6 text-center">
-        We couldn&apos;t load products. Please try again.
+      <p className="text-muted-foreground mb-2 text-center max-w-md">
+        {error.message || "We couldn't load products. Please try again."}
       </p>
+      {error.digest && (
+        <p className="text-xs text-muted-foreground mb-4">Error ID: {error.digest}</p>
+      )}
       <Button onClick={reset}>Try again</Button>
     </div>
   );
