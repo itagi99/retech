@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronDown, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -47,19 +46,9 @@ function FilterGroup({
           className={cn("transition-transform text-muted-foreground", isOpen && "rotate-180")}
         />
       </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="pt-3 space-y-2">{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className={`overflow-hidden transition-all duration-200 ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
+        <div className="pt-3 space-y-2">{children}</div>
+      </div>
     </div>
   );
 }
