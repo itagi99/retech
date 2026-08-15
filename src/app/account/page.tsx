@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getCustomerSession } from "@/lib/customer-session";
 import { updateProfile, changePassword } from "@/actions/profile";
 import AccountSidebar from "@/components/account/account-sidebar";

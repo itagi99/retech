@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Suspense } from "react";
 import Link from "next/link";
 import { Plus, Search, Filter, Pencil, Trash2, Eye } from "lucide-react";
