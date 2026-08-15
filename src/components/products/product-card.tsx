@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, type MouseEvent } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ShoppingCart, Eye, Play, Shield, Package } from "lucide-react";
 import { useCart } from "@/components/providers/cart-provider";
 import type { Product } from "@/lib/products";
@@ -14,7 +13,6 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -37,25 +35,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     setIsOpen(true);
   };
 
-  const handleQuickView = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-  };
-
   const gradientIndex = parseInt(product.id, 10) % 12;
 
   return (
-    <motion.div
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/20"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setShowVideo(false);
-      }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      {/* Image Container */}
+    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/20">
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-muted to-muted/50">
         {showVideo && product.videoUrl ? (
           <video
@@ -96,7 +79,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
 
-        {/* Condition Badge */}
         <span
           className={cn(
             "absolute left-3 top-3 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
@@ -106,14 +88,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           {badge.label}
         </span>
 
-        {/* Discount Badge */}
         {hasDiscount && (
           <span className="absolute right-3 top-3 rounded-full bg-red-500 px-2.5 py-0.5 text-[10px] font-bold text-white">
             -{product.discountPercent}%
           </span>
         )}
 
-        {/* Wishlist Button */}
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -124,13 +104,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             isWishlisted && "text-red-500"
           )}
         >
-          <Heart
-            size={14}
-            className={cn(isWishlisted && "fill-current")}
-          />
+          <Heart size={14} className={cn(isWishlisted && "fill-current")} />
         </button>
 
-        {/* Video Play Button */}
         {product.videoUrl && (
           <button
             onClick={(e) => {
@@ -147,41 +123,30 @@ export default function ProductCard({ product }: ProductCardProps) {
           </button>
         )}
 
-        {/* Quick Actions Overlay */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8"
-            >
-              <button
-                onClick={handleQuickView}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-white/20 py-2 text-xs font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/30"
-              >
-                <Eye size={14} />
-                Quick View
-              </button>
-              <button
-                onClick={handleAddToCart}
-                disabled={!inStock}
-                className={cn(
-                  "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-medium text-white transition-colors",
-                  inStock
-                    ? "bg-primary hover:bg-primary/90"
-                    : "bg-gray-500/50 cursor-not-allowed"
-                )}
-              >
-                <ShoppingCart size={14} />
-                {inStock ? "Add to Cart" : "Out of Stock"}
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            onClick={handleQuickView}
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-white/20 py-2 text-xs font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/30"
+          >
+            <Eye size={14} />
+            Quick View
+          </button>
+          <button
+            onClick={handleAddToCart}
+            disabled={!inStock}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-medium text-white transition-colors",
+              inStock
+                ? "bg-primary hover:bg-primary/90"
+                : "bg-gray-500/50 cursor-not-allowed"
+            )}
+          >
+            <ShoppingCart size={14} />
+            {inStock ? "Add to Cart" : "Out of Stock"}
+          </button>
+        </div>
       </div>
 
-      {/* Product Info */}
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-1 flex items-center gap-2">
           <span className="text-xs font-medium text-muted-foreground">{product.brand}</span>
@@ -224,6 +189,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
