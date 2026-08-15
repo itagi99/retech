@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getOrder } from "@/actions/orders";
 import AccountSidebar from "@/components/account/account-sidebar";
 import { Badge } from "@/components/ui/badge";
