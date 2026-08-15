@@ -1,11 +1,10 @@
 export const dynamic = 'force-dynamic';
 
-import { ChevronDown, Grid3X3 } from "lucide-react";
+import { Grid3X3 } from "lucide-react";
 import ProductCard from "@/components/products/product-card";
 import FilterSidebar from "@/components/products/filter-sidebar";
+import SortSelectClient from "@/components/products/sort-select";
 import { getProducts, type FilterState } from "@/lib/products";
-import { SORT_OPTIONS } from "@/lib/products";
-import { cn } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -99,34 +98,6 @@ type ProductType = {
   isTrending: boolean;
   specifications: Record<string, string>;
 };
-
-function SortSelectClient({ value }: { value: string }) {
-  const createUrl = (newSort: string) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("sort", newSort);
-    url.searchParams.delete("page");
-    return url.toString();
-  };
-
-  return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => {
-          window.location.href = createUrl(e.target.value);
-        }}
-        className="h-9 appearance-none rounded-lg border border-border bg-background pl-3 pr-8 text-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
-      >
-        {SORT_OPTIONS.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.name}
-          </option>
-        ))}
-      </select>
-      <ChevronDown className="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-    </div>
-  );
-}
 
 function ProductsContent({ filters, allProducts }: { filters: FilterState; allProducts: ProductType[] }) {
   const filtered = allProducts.filter((p) => {
