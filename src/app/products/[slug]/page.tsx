@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Star,
   Heart,
@@ -23,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import ProductViewer from "@/components/three/ProductViewer";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -409,41 +409,29 @@ function ProductGallery({
         ))}
       </div>
 
-      {/* Fullscreen Modal */}
-      <AnimatePresence>
-        {isFullscreen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95">
+          <button
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
             onClick={() => setIsFullscreen(false)}
           >
-            <button
-              className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
-              onClick={() => setIsFullscreen(false)}
-            >
-              <X className="h-6 w-6" />
-            </button>
-            <div
-              className="h-[90vh] w-[90vw] bg-cover bg-center"
-              style={{ backgroundImage: `url(${currentSrc})` }}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 3D Viewer */}
-      <AnimatePresence>
-        {show3D && model3DUrl && (
-          <ProductViewer
-            modelUrl={model3DUrl}
-            autoRotate
-            onClose={() => setShow3D(false)}
+            <X className="h-6 w-6" />
+          </button>
+          <div
+            className="h-[90vh] w-[90vw] bg-cover bg-center"
+            style={{ backgroundImage: `url(${currentSrc})` }}
+            onClick={(e) => e.stopPropagation()}
           />
-        )}
-      </AnimatePresence>
+        </div>
+      )}
+
+      {show3D && model3DUrl && (
+        <ProductViewer
+          modelUrl={model3DUrl}
+          autoRotate
+          onClose={() => setShow3D(false)}
+        />
+      )}
     </div>
   );
 }
@@ -487,15 +475,8 @@ function SpecsAccordion({
         )}
       </button>
 
-      <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
+          <div className="overflow-hidden">
             <div className="border-t border-border px-4 py-3">
               <table className="w-full text-sm">
                 <tbody>
@@ -518,9 +499,8 @@ function SpecsAccordion({
                 </tbody>
               </table>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </div>
   );
 }
