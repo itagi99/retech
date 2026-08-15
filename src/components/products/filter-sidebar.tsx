@@ -312,23 +312,13 @@ export default function FilterSidebar({ filters, totalResults }: FilterSidebarPr
           )}
         </Button>
 
-        <AnimatePresence>
-          {isMobileOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 bg-black/50"
-                onClick={() => setIsMobileOpen(false)}
-              />
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "-100%" }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] overflow-y-auto bg-background border-r border-border p-4 shadow-xl"
-              >
+        {isMobileOpen && (
+          <>
+            <div
+              className="fixed inset-0 z-50 bg-black/50"
+              onClick={() => setIsMobileOpen(false)}
+            />
+            <div className="fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] overflow-y-auto bg-background border-r border-border p-4 shadow-xl">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold">Filters</h3>
                   <button
@@ -352,11 +342,10 @@ export default function FilterSidebar({ filters, totalResults }: FilterSidebarPr
                     Show Results
                   </Button>
                 </div>
-              </motion.div>
+              </div>
             </>
           )}
-        </AnimatePresence>
-      </div>
+        </div>
     </>
   );
 }
