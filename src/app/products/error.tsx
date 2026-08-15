@@ -23,6 +23,11 @@ export default function ProductsError({
       {error.digest && (
         <p className="text-xs text-muted-foreground mb-4">Error ID: {error.digest}</p>
       )}
+      {error.stack && (
+        <pre className="text-xs bg-muted p-4 rounded-lg mb-4 max-w-lg overflow-auto text-left">
+          {error.stack}
+        </pre>
+      )}
       <Button onClick={reset}>Try again</Button>
     </div>
   );
