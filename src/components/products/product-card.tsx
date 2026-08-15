@@ -37,6 +37,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const gradientIndex = parseInt(product.id, 10) % 12;
 
+  const handleQuickView = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/20">
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-muted to-muted/50">
