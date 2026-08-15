@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState } from "react";
 import {
   Star,
   Heart,
@@ -9,18 +9,14 @@ import {
   Zap,
   Truck,
   RotateCcw,
-  ChevronDown,
-  ChevronUp,
-  Maximize,
-  X,
-  Box,
   CheckCircle2,
 } from "lucide-react";
 import { useCart } from "@/components/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import ProductViewer from "@/components/three/ProductViewer";
+import ProductGallery from "@/components/products/product-gallery";
+import SpecsAccordion from "@/components/products/specs-accordion";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 
@@ -290,216 +286,6 @@ function Stars({ rating, size = 20 }: { rating: number; size?: number }) {
           }
         />
       ))}
-    </div>
-  );
-}
-
-function ProductGallery({
-  images,
-  videoUrl,
-  model3DUrl,
-}: {
-  images: string[];
-  videoUrl?: string;
-  model3DUrl?: string;
-}) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false);
-  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
-  const [show3D, setShow3D] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!isZoomed || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      setZoomPosition({ x, y });
-    },
-    [isZoomed]
-  );
-
-  const currentSrc = showVideo
-    ? videoUrl
-    : images[selectedIndex] || images[0];
-
-  return (
-    <div className="space-y-4">
-      {/* Main Image */}
-      <div
-        ref={containerRef}
-        className="relative aspect-square w-full overflow-hidden rounded-2xl bg-muted cursor-zoom-in"
-        onMouseEnter={() => setIsZoomed(true)}
-        onMouseLeave={() => setIsZoomed(false)}
-        onMouseMove={handleMouseMove}
-        onClick={() => setIsFullscreen(true)}
-      >
-        {showVideo && videoUrl ? (
-          <video
-            src={videoUrl}
-            controls
-            autoPlay
-            loop
-            muted
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div
-            className="h-full w-full bg-cover bg-center transition-transform duration-200"
-            style={{
-              backgroundImage: `url(${currentSrc})`,
-              transform: isZoomed ? "scale(2.5)" : "scale(1)",
-              transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-            }}
-          />
-        )}
-
-        {/* Actions overlay */}
-        <div className="absolute right-3 top-3 flex flex-col gap-2">
-          {model3DUrl && (
-            <button
-              onClick={() => setShow3D(true)}
-              className="rounded-lg bg-white/90 p-2 shadow-lg backdrop-blur-sm hover:bg-white dark:bg-black/80 dark:hover:bg-black"
-              aria-label="View in 3D"
-            >
-              <Box className="h-5 w-5" />
-            </button>
-          )}
-          <button
-            onClick={() => setIsFullscreen(true)}
-            className="rounded-lg bg-white/90 p-2 shadow-lg backdrop-blur-sm hover:bg-white dark:bg-black/80 dark:hover:bg-black"
-            aria-label="Fullscreen"
-          >
-            <Maximize className="h-5 w-5" />
-          </button>
-        </div>
-
-        {videoUrl && (
-          <div className="absolute bottom-3 left-3">
-            <button
-              onClick={() => setShowVideo(!showVideo)}
-              className="rounded-lg bg-white/90 px-3 py-1.5 text-sm font-medium shadow-lg backdrop-blur-sm hover:bg-white dark:bg-black/80 dark:hover:bg-black"
-            >
-              {showVideo ? "Show Image" : "Play Video"}
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Thumbnails */}
-      <div className="flex gap-3 overflow-x-auto pb-2">
-        {images.map((img, idx) => (
-          <button
-            key={idx}
-            onClick={() => {
-              setSelectedIndex(idx);
-              setShowVideo(false);
-            }}
-            className={`h-20 w-20 flex-shrink-0 rounded-lg border-2 bg-cover bg-center transition-all ${
-              selectedIndex === idx && !showVideo
-                ? "border-foreground opacity-100"
-                : "border-transparent opacity-60 hover:opacity-100"
-            }`}
-            style={{ backgroundImage: `url(${img})` }}
-          />
-        ))}
-      </div>
-
-      {isFullscreen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95">
-          <button
-            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
-            onClick={() => setIsFullscreen(false)}
-          >
-            <X className="h-6 w-6" />
-          </button>
-          <div
-            className="h-[90vh] w-[90vw] bg-cover bg-center"
-            style={{ backgroundImage: `url(${currentSrc})` }}
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
-      )}
-
-      {show3D && model3DUrl && (
-        <ProductViewer
-          modelUrl={model3DUrl}
-          autoRotate
-          onClose={() => setShow3D(false)}
-        />
-      )}
-    </div>
-  );
-}
-
-function SpecsAccordion({
-  specifications,
-}: {
-  specifications: Record<string, string>;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const keySpecs = [
-    "Processor",
-    "RAM",
-    "Storage",
-    "GPU",
-    "Screen",
-    "OS",
-    "Weight",
-  ];
-
-  const visibleSpecs = Object.entries(specifications).filter(([key]) =>
-    keySpecs.includes(key)
-  );
-
-  const otherSpecs = Object.entries(specifications).filter(
-    ([key]) => !keySpecs.includes(key)
-  );
-
-  return (
-    <div className="rounded-xl border border-border">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between p-4 text-left font-semibold"
-      >
-        <span>Specifications</span>
-        {isOpen ? (
-          <ChevronUp className="h-5 w-5" />
-        ) : (
-          <ChevronDown className="h-5 w-5" />
-        )}
-      </button>
-
-        {isOpen && (
-          <div className="overflow-hidden">
-            <div className="border-t border-border px-4 py-3">
-              <table className="w-full text-sm">
-                <tbody>
-                  {visibleSpecs.map(([key, value]) => (
-                    <tr key={key} className="border-b border-border last:border-0">
-                      <td className="py-2.5 font-medium text-muted-foreground w-1/3">
-                        {key}
-                      </td>
-                      <td className="py-2.5">{value}</td>
-                    </tr>
-                  ))}
-                  {otherSpecs.map(([key, value]) => (
-                    <tr key={key} className="border-b border-border last:border-0">
-                      <td className="py-2.5 font-medium text-muted-foreground">
-                        {key}
-                      </td>
-                      <td className="py-2.5">{value}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
     </div>
   );
 }
