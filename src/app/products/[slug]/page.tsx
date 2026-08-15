@@ -23,7 +23,6 @@ import { Separator } from "@/components/ui/separator";
 import ProductViewer from "@/components/three/ProductViewer";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Review {
