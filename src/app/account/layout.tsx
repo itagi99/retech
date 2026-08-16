@@ -22,10 +22,12 @@ const navItems = [
 ];
 
 async function getUserStats(userId: string) {
-  const [orderCount] = await db.select({ count: count() }).from(orders).where(eq(orders.userId, userId));
-  return {
-    orderCount: orderCount?.count || 0,
-  };
+  try {
+    const [orderCount] = await db.select({ count: count() }).from(orders).where(eq(orders.userId, userId));
+    return { orderCount: orderCount?.count || 0 };
+  } catch {
+    return { orderCount: 0 };
+  }
 }
 
 export default async function AccountLayout({ children }: { children: React.ReactNode }) {
@@ -34,8 +36,9 @@ export default async function AccountLayout({ children }: { children: React.Reac
     redirect("/login");
   }
 
+  // Handle potential DB errors gracefully
   const stats = await getUserStats(session.userId);
-  const initials = session.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+  const initials = session.name?.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) || "U";
 
   return (
     <div className="min-h-screen bg-background">
