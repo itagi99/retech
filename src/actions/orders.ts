@@ -124,7 +124,11 @@ export async function getUserOrders() {
 
   const ordersWithItems = await Promise.all(userOrders.map(async (order) => {
     const items = await db.select().from(orderItems).where(eq(orderItems.orderId, order.id));
-    return { ...order, items };
+    return {
+      ...order,
+      shippingAddress: typeof order.shippingAddress === 'string' ? JSON.parse(order.shippingAddress) : order.shippingAddress,
+      items
+    };
   }));
 
   return ordersWithItems;
@@ -141,5 +145,9 @@ export async function getOrder(orderId: string) {
 
   const items = await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
 
-  return { ...order, items } as OrderWithItems;
+  return {
+    ...order,
+    shippingAddress: typeof order.shippingAddress === 'string' ? JSON.parse(order.shippingAddress) : order.shippingAddress,
+    items
+  } as OrderWithItems;
 }
