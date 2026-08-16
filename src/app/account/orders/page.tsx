@@ -3,6 +3,7 @@ import { getUserOrders } from "@/actions/orders";
 import AccountSidebar from "@/components/account/account-sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { formatPriceFixed } from "@/lib/utils";
 
 const statusColors: Record<string, "default" | "success" | "warning" | "destructive"> = {
   pending: "warning",
@@ -47,7 +48,7 @@ export default async function AccountOrdersPage() {
                     <Badge variant={statusColors[order.status] || "default"} className="capitalize">
                       {order.status}
                     </Badge>
-                    <span className="font-semibold text-sm sm:text-base">${Number(order.total).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                    <span className="font-semibold text-sm sm:text-base">{formatPriceFixed(Number(order.total))}</span>
                   </div>
                 </div>
               </div>

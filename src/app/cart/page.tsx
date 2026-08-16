@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Trash2, Minus, Plus, ShoppingBag, Save, ArrowRight, Tag, Truck, Percent } from "lucide-react";
 import { useCart } from "@/components/providers/cart-provider";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatPriceFixed } from "@/lib/utils";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, totalPrice } = useCart();
@@ -70,7 +70,7 @@ export default function CartPage() {
                         <Link href={`/products/${item.slug}`} className="font-semibold text-sm sm:text-base hover:text-primary transition-colors line-clamp-2">
                           {item.name}
                         </Link>
-                        <p className="text-sm text-muted-foreground mt-1">${item.price.toLocaleString()}</p>
+                        <p className="text-sm text-muted-foreground mt-1">{formatPriceFixed(item.price)}</p>
                       </div>
                       <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive" onClick={() => removeItem(item.id)}>
                         <Trash2 className="h-4 w-4" />
@@ -114,7 +114,7 @@ export default function CartPage() {
                     <Link href={`/products/${item.slug}`} className="font-semibold text-sm hover:text-primary transition-colors line-clamp-2">
                       {item.name}
                     </Link>
-                    <p className="text-sm text-muted-foreground mt-1">${item.price.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{formatPriceFixed(item.price)}</p>
                     <div className="flex items-center gap-2 mt-3">
                       <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={() => handleMoveToCart(item)}>
                         Move to Cart
@@ -136,23 +136,23 @@ export default function CartPage() {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-medium">${subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="font-medium">{formatPriceFixed(subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground flex items-center gap-1"><Percent className="h-3 w-3" /> Discount</span>
-                <span className="font-medium text-green-600">-${discount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="font-medium text-green-600">-{formatPriceFixed(discount)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground flex items-center gap-1"><Truck className="h-3 w-3" /> Shipping</span>
-                <span className="font-medium">{shipping === 0 ? "Free" : `$${shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}</span>
+                <span className="font-medium">{shipping === 0 ? "Free" : formatPriceFixed(shipping)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground flex items-center gap-1"><Tag className="h-3 w-3" /> Tax (8%)</span>
-                <span className="font-medium">${tax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="font-medium">{formatPriceFixed(tax)}</span>
               </div>
               <div className="border-t border-border pt-3 flex justify-between text-base font-semibold">
                 <span>Grand Total</span>
-                <span>${grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span>{formatPriceFixed(grandTotal)}</span>
               </div>
             </div>
 
@@ -183,7 +183,7 @@ export default function CartPage() {
 
           {subtotal > 0 && subtotal < 500 && (
             <div className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
-              Add <span className="font-semibold text-foreground">${(500 - subtotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> more for free shipping!
+              Add <span className="font-semibold text-foreground">{formatPriceFixed(500 - subtotal)}</span> more for free shipping!
             </div>
           )}
         </div>

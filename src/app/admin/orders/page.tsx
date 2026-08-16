@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { getOrders } from "@/actions/admin/orders";
+import { formatPriceFixed } from "@/lib/utils";
 
 const ORDER_STATUSES = [
   { value: "pending", label: "Pending" },
@@ -107,7 +108,7 @@ async function OrdersTable({ searchParams }: { searchParams: { [key: string]: st
                     <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                     <TableCell><StatusBadge status={order.status} /></TableCell>
                     <TableCell><PaymentBadge status={order.paymentStatus} /></TableCell>
-                    <TableCell>${Number(order.total).toFixed(2)}</TableCell>
+                    <TableCell>{formatPriceFixed(Number(order.total))}</TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="icon" asChild>
                         <Link href={`/admin/orders/${order.id}`}>

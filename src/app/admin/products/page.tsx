@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getProducts, getCategories, getBrands, deleteProduct } from "@/actions/admin/products";
 import { CONDITIONS } from "@/lib/products";
+import { formatPriceFixed } from "@/lib/utils";
 
 interface ProductsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -96,7 +97,7 @@ async function ProductsTable({ searchParams }: { searchParams: { [key: string]: 
                   <TableCell>{product.brandId || "-"}</TableCell>
                   <TableCell className="capitalize">{product.categoryId}</TableCell>
                   <TableCell className="capitalize">{product.condition.replace("_", " ")}</TableCell>
-                  <TableCell>${Number(product.price).toFixed(2)}</TableCell>
+                  <TableCell>{formatPriceFixed(Number(product.price))}</TableCell>
                   <TableCell>
                     <span className={product.stock > 0 ? "text-green-600" : "text-red-600"}>
                       {product.stock}
@@ -151,7 +152,7 @@ async function ProductsTable({ searchParams }: { searchParams: { [key: string]: 
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold">${Number(product.price).toFixed(2)}</span>
+                  <span className="font-semibold">{formatPriceFixed(Number(product.price))}</span>
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${product.isActive ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400"}`}>
                     {product.isActive ? "Active" : "Inactive"}
                   </span>

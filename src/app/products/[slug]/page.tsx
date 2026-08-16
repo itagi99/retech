@@ -19,6 +19,7 @@ import ProductGallery from "@/components/products/product-gallery";
 import SpecsAccordion from "@/components/products/specs-accordion";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Review {
@@ -342,10 +343,10 @@ function RelatedProductCard({ product }: { product: RelatedProduct }) {
           {product.name}
         </h3>
         <div className="mt-2 flex items-center gap-2">
-          <span className="font-semibold">${product.price.toLocaleString()}</span>
+          <span className="font-semibold">{formatPrice(product.price)}</span>
           {product.originalPrice && (
             <span className="text-sm text-muted-foreground line-through">
-              ${product.originalPrice.toLocaleString()}
+              {formatPrice(product.originalPrice)}
             </span>
           )}
         </div>
@@ -487,10 +488,10 @@ export default function ProductPage() {
             <div className="space-y-2">
               <div className="flex items-baseline gap-3">
                 <span className="text-4xl font-bold">
-                  ${product.price.toLocaleString()}
+                  {formatPrice(product.price)}
                 </span>
                 <span className="text-xl text-muted-foreground line-through">
-                  ${product.originalPrice.toLocaleString()}
+                  {formatPrice(product.originalPrice)}
                 </span>
                 <Badge variant="destructive">
                   Save {product.discount}%

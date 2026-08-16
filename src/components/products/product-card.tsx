@@ -5,7 +5,7 @@ import { Heart, ShoppingCart, Eye } from "lucide-react";
 import { useCart } from "@/components/providers/cart-provider";
 import type { Product } from "@/lib/products";
 import { getConditionBadge } from "@/lib/products";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -67,9 +67,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.rating.toFixed(1)} ({product.reviewCount})
         </p>
         <div className="mt-auto flex items-center gap-2">
-          <span className="text-lg font-bold text-foreground">${product.price.toLocaleString()}</span>
+          <span className="text-lg font-bold text-foreground">{formatPrice(product.price)}</span>
           {hasDiscount && (
-            <span className="text-sm text-muted-foreground line-through">${product.compareAtPrice!.toLocaleString()}</span>
+            <span className="text-sm text-muted-foreground line-through">{formatPrice(product.compareAtPrice!)}</span>
           )}
         </div>
         <div className="mt-2 flex gap-2">

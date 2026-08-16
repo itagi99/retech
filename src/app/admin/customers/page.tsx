@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCustomers } from "@/actions/admin/orders";
+import { formatPriceFixed } from "@/lib/utils";
 
 async function CustomersTable({ search }: { search: string }) {
   const { customers } = await getCustomers({ search, limit: 20 });
@@ -44,7 +45,7 @@ async function CustomersTable({ search }: { search: string }) {
                   <TableCell>{customer.email}</TableCell>
                   <TableCell>{customer.phone || "N/A"}</TableCell>
                   <TableCell>{customer.ordersCount}</TableCell>
-                  <TableCell>${customer.totalSpent.toFixed(2)}</TableCell>
+                  <TableCell>{formatPriceFixed(customer.totalSpent)}</TableCell>
                   <TableCell>{new Date(customer.createdAt).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))

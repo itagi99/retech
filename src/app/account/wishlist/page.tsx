@@ -8,6 +8,7 @@ import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
+import { formatPrice } from "@/lib/utils";
 
 interface WishlistItem {
   id: string;
@@ -119,9 +120,9 @@ export default function AccountWishlistPage() {
                   <h3 className="font-medium text-sm line-clamp-2 hover:text-primary transition-colors">{item.product.name}</h3>
                 </Link>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold">${item.product.price.toLocaleString()}</span>
+                  <span className="text-lg font-bold">{formatPrice(Number(item.product.price))}</span>
                   {item.product.compareAtPrice && item.product.compareAtPrice > item.product.price && (
-                    <span className="text-sm text-muted-foreground line-through">${item.product.compareAtPrice.toLocaleString()}</span>
+                    <span className="text-sm text-muted-foreground line-through">{formatPrice(Number(item.product.compareAtPrice))}</span>
                   )}
                 </div>
                 <Button

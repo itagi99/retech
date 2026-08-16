@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCustomer } from "@/actions/admin/orders";
+import { formatPriceFixed } from "@/lib/utils";
 
 export default async function CustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -80,7 +81,7 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
                         <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                         <TableCell className="capitalize">{order.status}</TableCell>
                         <TableCell className="capitalize">{order.paymentStatus}</TableCell>
-                        <TableCell className="text-right">${Number(order.total).toFixed(2)}</TableCell>
+                        <TableCell className="text-right">{formatPriceFixed(Number(order.total))}</TableCell>
                       </TableRow>
                     ))
                   )}

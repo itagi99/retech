@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, CreditCard, Truck, User, MapPin, CheckCircle
 import { useCart } from "@/components/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice, formatPriceFixed } from "@/lib/utils";
 
 type Step = "information" | "shipping" | "method" | "payment" | "review";
 
@@ -223,7 +223,7 @@ export default function CheckoutPage() {
                         <p className="text-xs text-muted-foreground">{method.days}</p>
                       </div>
                     </div>
-                    <span className="font-semibold text-sm">${method.price.toFixed(2)}</span>
+                    <span className="font-semibold text-sm">{formatPriceFixed(method.price)}</span>
                   </label>
                 ))}
               </div>
@@ -301,7 +301,7 @@ export default function CheckoutPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium line-clamp-1">{item.name}</p>
                     <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
-                    <p className="text-sm font-semibold">${(item.price * item.quantity).toLocaleString()}</p>
+                    <p className="text-sm font-semibold">{formatPrice(item.price * item.quantity)}</p>
                   </div>
                 </div>
               ))}
@@ -309,19 +309,19 @@ export default function CheckoutPage() {
             <div className="border-t border-border pt-3 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-medium">${subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="font-medium">{formatPriceFixed(subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping</span>
-                <span className="font-medium">{shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}</span>
+                <span className="font-medium">{shippingCost === 0 ? "Free" : formatPriceFixed(shippingCost)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Tax (8%)</span>
-                <span className="font-medium">${tax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="font-medium">{formatPriceFixed(tax)}</span>
               </div>
               <div className="border-t border-border pt-2 flex justify-between text-base font-semibold">
                 <span>Total</span>
-                <span>${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span>{formatPriceFixed(total)}</span>
               </div>
             </div>
           </div>

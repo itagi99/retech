@@ -4,7 +4,7 @@ import { getOrder } from "@/actions/orders";
 import AccountSidebar from "@/components/account/account-sidebar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatPriceFixed } from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -63,7 +63,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                     <p className="font-medium text-sm line-clamp-1">{item.productName}</p>
                     <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                   </div>
-                  <p className="font-semibold text-sm">${Number(item.total).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                  <p className="font-semibold text-sm">{formatPriceFixed(Number(item.total))}</p>
                 </div>
               ))}
             </div>
@@ -109,23 +109,23 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-medium">${Number(order.subtotal).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                <span className="font-medium">{formatPriceFixed(Number(order.subtotal))}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Discount</span>
-                <span className="font-medium">${Number(order.discount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                <span className="font-medium">{formatPriceFixed(Number(order.discount))}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping</span>
-                <span className="font-medium">${Number(order.shipping).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                <span className="font-medium">{formatPriceFixed(Number(order.shipping))}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Tax</span>
-                <span className="font-medium">${Number(order.tax).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                <span className="font-medium">{formatPriceFixed(Number(order.tax))}</span>
               </div>
               <div className="border-t border-border pt-2 flex justify-between text-base font-semibold">
                 <span>Total</span>
-                <span>${Number(order.total).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                <span>{formatPriceFixed(Number(order.total))}</span>
               </div>
             </div>
           </div>

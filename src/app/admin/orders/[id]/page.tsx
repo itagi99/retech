@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getOrder, updateOrderStatus, updateTrackingNumber } from "@/actions/admin/orders";
 import { ORDER_STATUSES } from "@/lib/products";
+import { formatPriceFixed } from "@/lib/utils";
 
 const ORDER_STATUSES_LIST = [
   { value: "pending", label: "Pending" },
@@ -90,9 +91,9 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                           )}
                         </div>
                       </TableCell>
-                      <TableCell>${Number(item.price).toFixed(2)}</TableCell>
+                      <TableCell>{formatPriceFixed(Number(item.price))}</TableCell>
                       <TableCell>{item.quantity}</TableCell>
-                      <TableCell className="text-right">${Number(item.total).toFixed(2)}</TableCell>
+                      <TableCell className="text-right">{formatPriceFixed(Number(item.total))}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -107,24 +108,24 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <CardContent className="grid gap-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatPriceFixed(subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Discount</span>
-                <span>-${discount.toFixed(2)}</span>
+                <span>-{formatPriceFixed(discount)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping</span>
-                <span>${shipping.toFixed(2)}</span>
+                <span>{formatPriceFixed(shipping)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Tax</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>{formatPriceFixed(tax)}</span>
               </div>
               <Separator />
               <div className="flex justify-between font-semibold">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{formatPriceFixed(total)}</span>
               </div>
             </CardContent>
           </Card>
