@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "@/components/ui/toaster";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { CartProvider } from "@/components/providers/cart-provider";
-import CartDrawer from "@/components/layout/cart-drawer";
-import Navbar from "@/components/layout/navbar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -69,19 +64,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <CartProvider>
-            <Navbar />
-            {children}
-            <CartDrawer />
-            <Toaster />
-          </CartProvider>
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );
