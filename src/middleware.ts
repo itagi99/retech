@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSession } from "@/lib/auth";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const session = getSession(request);
+  const session = await getSession(request);
 
   const isAdminRoute = pathname.startsWith("/admin") && pathname !== "/admin-login";
   const isCustomerRoute = pathname.startsWith("/account") || pathname.startsWith("/checkout");

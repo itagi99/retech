@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import { SignJWT, jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 import { hash, compare } from "bcryptjs";
 
@@ -16,6 +16,10 @@ export interface SessionPayload {
   role?: string;
 }
 
+function getSecretKey() {
+  return new TextEncoder().encode(AUTH_SECRET);
+}
+
 export async function hashPassword(password: string) {
   return hash(password, SALT_ROUNDS);
 }
@@ -24,20 +28,25 @@ export async function comparePassword(password: string, hashedPassword: string) 
   return compare(password, hashedPassword);
 }
 
-export function createSession(userId: string, userType: "admin" | "customer", email: string, name: string, role?: string): string {
+export async function createSession(userId: string, userType: "admin" | "customer", email: string, name: string, role?: string): Promise<string> {
   const payload: SessionPayload = { userId, userType, email, name, role };
-  return jwt.sign(payload, AUTH_SECRET, { expiresIn: "7d" });
+  return new SignJWT(payload as any)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .sign(getSecretKey());
 }
 
-export function verifySession(token: string): SessionPayload | null {
+export async function verifySession(token: string): Promise<SessionPayload | null> {
   try {
-    return jwt.verify(token, AUTH_SECRET) as SessionPayload;
+    const { payload } = await jwtVerify(token, getSecretKey());
+    return payload as unknown as SessionPayload;
   } catch {
     return null;
   }
 }
 
-export function getSession(req: NextRequest): SessionPayload | null {
+export async function getSession(req: NextRequest): Promise<SessionPayload | null> {
   const adminToken = req.cookies.get(ADMIN_COOKIE)?.value;
   const customerToken = req.cookies.get(CUSTOMER_COOKIE)?.value;
 

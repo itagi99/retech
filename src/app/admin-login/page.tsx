@@ -37,8 +37,7 @@ export default function AdminLoginPage() {
         return;
       }
 
-      router.push(data.redirect || "/admin");
-      router.refresh();
+      window.location.href = data.redirect || "/admin";
     } catch {
       setError("Something went wrong");
       setLoading(false);

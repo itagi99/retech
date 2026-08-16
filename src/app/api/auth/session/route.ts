@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ authenticated: false });
   }
 
-  const session = verifySession(token);
+  const session = await verifySession(token);
   if (!session) {
     return NextResponse.json({ authenticated: false });
   }

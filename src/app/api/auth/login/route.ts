@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
     }
 
-    const token = createSession(admin[0].id, "admin", admin[0].email, admin[0].name, admin[0].role);
+    const token = await createSession(admin[0].id, "admin", admin[0].email, admin[0].name, admin[0].role);
 
     const response = NextResponse.json({ success: true, redirect: "/admin" });
     response.cookies.set("retech-admin-session", token, {

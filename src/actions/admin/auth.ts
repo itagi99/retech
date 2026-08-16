@@ -40,7 +40,7 @@ export async function loginAdmin(formData: FormData) {
     return { error: "Invalid email or password" };
   }
 
-  const token = createSession(admin[0].id, "admin", admin[0].email, admin[0].name, admin[0].role);
+  const token = await createSession(admin[0].id, "admin", admin[0].email, admin[0].name, admin[0].role);
 
   const cookieStore = await cookies();
   cookieStore.set(ADMIN_COOKIE, token, {

@@ -23,7 +23,7 @@ async function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     redirect("/admin-login");
   }
 
-  const session = verifySession(token);
+  const session = await verifySession(token);
   if (!session) {
     redirect("/admin-login");
   }
