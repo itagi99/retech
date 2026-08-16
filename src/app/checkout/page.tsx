@@ -8,6 +8,7 @@ import { useCart } from "@/components/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn, formatPrice, formatPriceFixed } from "@/lib/utils";
+import { createOrder } from "@/actions/orders";
 
 type Step = "information" | "shipping" | "method" | "payment" | "review";
 
@@ -110,21 +111,11 @@ export default function CheckoutPage() {
     }))));
 
     try {
-      const response = await fetch("/actions/orders", {
-        method: "POST",
-        body: payload,
-      });
-
-      const result = await response.json();
-
-      if (result.error) {
+      const result = await createOrder(payload);
+      if (result?.error) {
         alert(result.error);
         setIsSubmitting(false);
         return;
-      }
-
-      if (response.redirected) {
-        router.push(response.url);
       }
     } catch (error) {
       alert("Something went wrong. Please try again.");
