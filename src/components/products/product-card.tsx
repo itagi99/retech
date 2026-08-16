@@ -10,9 +10,10 @@ import { cn, formatPrice } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
+  compact?: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, compact = false }: ProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { addItem, setIsOpen } = useCart();
 
@@ -34,11 +35,97 @@ export default function ProductCard({ product }: ProductCardProps) {
     setIsOpen(true);
   };
 
+  if (compact) {
+    return (
+      <Link
+        href={`/products/${product.slug}`}
+        className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card hover:shadow-md transition-shadow"
+        onClick={(e) => {
+          if ((e.target as HTMLElement).closest("button")) {
+            e.preventDefault();
+          }
+        }}
+      >
+        <div className="relative aspect-[4/3] overflow-hidden bg-muted/50">
+          {product.thumbnail ? (
+            <img
+              src={product.thumbnail}
+              alt={product.name}
+              className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+              loading="lazy"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+              {product.name}
+            </div>
+          )}
+
+          <span className={cn("absolute left-1.5 top-1.5 rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide", badge.color)}>
+            {badge.label}
+          </span>
+
+          {hasDiscount && (
+            <span className="absolute right-1.5 top-1.5 rounded bg-red-500 px-1.5 py-0.5 text-[9px] font-bold text-white">
+              -{product.discountPercent}%
+            </span>
+          )}
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setIsWishlisted(!isWishlisted);
+            }}
+            className={cn("absolute right-1.5 bottom-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 shadow-sm transition-all hover:scale-110", isWishlisted && "text-red-500")}
+          >
+            <Heart size={12} className={cn(isWishlisted && "fill-current")} />
+          </button>
+        </div>
+
+        <div className="flex flex-1 flex-col p-2.5 space-y-1.5">
+          <p className="text-[10px] font-medium text-muted-foreground truncate">{product.brand}</p>
+          <h3 className="text-xs font-semibold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+          <div className="flex items-center justify-between">
+            <span className="text-base font-bold text-foreground">{formatPrice(product.price)}</span>
+            {hasDiscount && (
+              <span className="text-[10px] text-muted-foreground line-through">{formatPrice(product.compareAtPrice!)}</span>
+            )}
+          </div>
+          <button
+            onClick={handleAddToCart}
+            disabled={!inStock}
+            className={cn(
+              "w-full rounded py-1.5 text-[11px] font-medium text-white transition-colors",
+              inStock ? "bg-primary hover:bg-primary/90" : "bg-gray-500/50 cursor-not-allowed"
+            )}
+          >
+            <ShoppingCart size={12} className="inline mr-1" />
+            {inStock ? "Add" : "OOS"}
+          </button>
+        </div>
+      </Link>
+    );
+  }
+
   return (
-    <Link href={`/products/${product.slug}`} className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card">
+    <Link
+      href={`/products/${product.slug}`}
+      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card"
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest("button")) {
+          e.preventDefault();
+        }
+      }}
+    >
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-muted to-muted/50">
         {product.thumbnail ? (
-          <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+          <img
+            src={product.thumbnail}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
             <span className="text-xs text-muted-foreground/70 font-medium truncate max-w-[80%] mx-auto">
@@ -84,11 +171,21 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
         <div className="mt-2 flex gap-2">
-          <button onClick={handleAddToCart} disabled={!inStock} className={cn("flex-1 rounded-lg py-2 text-xs font-medium text-white transition-colors", inStock ? "bg-primary hover:bg-primary/90" : "bg-gray-500/50 cursor-not-allowed")}>
+          <button
+            onClick={handleAddToCart}
+            disabled={!inStock}
+            className={cn("flex-1 rounded-lg py-2 text-xs font-medium text-white transition-colors", inStock ? "bg-primary hover:bg-primary/90" : "bg-gray-500/50 cursor-not-allowed")}
+          >
             <ShoppingCart size={14} className="inline mr-1" />
             {inStock ? "Add to Cart" : "Out of Stock"}
           </button>
-          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="rounded-lg border border-border px-3 py-2 text-xs hover:bg-muted transition-colors">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            className="rounded-lg border border-border px-3 py-2 text-xs hover:bg-muted transition-colors"
+          >
             <Eye size={14} />
           </button>
         </div>
