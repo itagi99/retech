@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { CartProvider } from "@/components/providers/cart-provider";
 import CartDrawer from "@/components/layout/cart-drawer";
+import Navbar from "@/components/layout/navbar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -75,6 +76,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <CartProvider>
+            <Navbar />
             {children}
             <CartDrawer />
             <Toaster />

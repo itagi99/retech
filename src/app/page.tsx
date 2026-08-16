@@ -48,48 +48,6 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-8">
-              <Link href="/" className="text-xl font-bold tracking-tight">
-                ReTech
-              </Link>
-              <div className="hidden md:flex items-center gap-6">
-                <Link href="/products" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Shop</Link>
-                <Link href="/products?condition=refurbished" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Refurbished</Link>
-                <Link href="/products?condition=new" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">New</Link>
-                <Link href="/products?category=gaming" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Gaming</Link>
-                <Link href="/products?category=business" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Business</Link>
-                <Link href="/products?category=desktops" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Desktops</Link>
-                <Link href="/products?category=accessories" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Accessories</Link>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href="/products" className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <circle cx="11" cy="11" r="8" strokeWidth="2" />
-                  <path d="M21 21l-4.35-4.35" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </Link>
-              <Link href="/account/wishlist" className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
-                <Heart className="h-5 w-5" />
-              </Link>
-              <Link href="/account" className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="12" cy="7" r="4" strokeWidth="2" />
-                </svg>
-              </Link>
-              <Link href="/cart" className="relative p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
-                <ShoppingCart className="h-5 w-5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 text-white">
         <div className="absolute inset-0">

@@ -44,6 +44,9 @@ export async function getProductBySlug(slug: string) {
     .where(eq(productImages.productId, product.id))
     .orderBy(productImages.sortOrder);
 
+  // Fallback to thumbnail if no product images
+  const imageUrls = images.length > 0 ? images.map((i) => i.url) : (product.thumbnail ? [product.thumbnail] : []);
+
   let categoryName = "";
   let brandName = "";
   if (product.categoryId) {

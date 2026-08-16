@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Heart, ShoppingCart, Eye } from "lucide-react";
 import { useCart } from "@/components/providers/cart-provider";
@@ -19,7 +20,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
   const inStock = product.stock > 0;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     addItem({
       productId: product.id,
       name: product.name,
@@ -32,13 +35,17 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card">
+    <Link href={`/products/${product.slug}`} className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card">
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-muted to-muted/50">
-        <div className="flex h-full w-full items-center justify-center">
-          <span className="text-xs text-muted-foreground/70 font-medium truncate max-w-[80%] mx-auto">
-            {product.name}
-          </span>
-        </div>
+        {product.thumbnail ? (
+          <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <span className="text-xs text-muted-foreground/70 font-medium truncate max-w-[80%] mx-auto">
+              {product.name}
+            </span>
+          </div>
+        )}
 
         <span className={cn("absolute left-3 top-3 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide", badge.color)}>
           {badge.label}
@@ -51,7 +58,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
 
         <button
-          onClick={() => setIsWishlisted(!isWishlisted)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsWishlisted(!isWishlisted);
+          }}
           className={cn("absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm transition-all hover:scale-110", isWishlisted && "text-red-500")}
         >
           <Heart size={14} className={cn(isWishlisted && "fill-current")} />
@@ -77,11 +88,11 @@ export default function ProductCard({ product }: ProductCardProps) {
             <ShoppingCart size={14} className="inline mr-1" />
             {inStock ? "Add to Cart" : "Out of Stock"}
           </button>
-          <button className="rounded-lg border border-border px-3 py-2 text-xs hover:bg-muted transition-colors">
+          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="rounded-lg border border-border px-3 py-2 text-xs hover:bg-muted transition-colors">
             <Eye size={14} />
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
