@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, Heart, User, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, Heart, User, Menu, X } from "lucide-react";
 import { useCart } from "@/components/providers/cart-provider";
 import { cn } from "@/lib/utils";
+import SearchBar from "@/components/layout/search-bar";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -52,15 +53,11 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Link
-              href="/products"
-              className={cn(
-                "p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110",
-                pathname === "/products" ? "text-primary" : ""
-              )}
-            >
-              <Search className="h-5 w-5" />
-            </Link>
+            {/* Search Bar - Hidden on mobile, shown on desktop */}
+            <div className="hidden lg:block w-72 md:w-96">
+              <SearchBar placeholder="Search products, brands, categories..." />
+            </div>
+
             <Link
               href="/account/wishlist"
               className={cn(
@@ -101,6 +98,11 @@ export default function Navbar() {
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
+        </div>
+
+        {/* Mobile Search Bar */}
+        <div className="lg:hidden py-3 border-t border-border">
+          <SearchBar placeholder="Search products, brands, categories..." showRecent={false} />
         </div>
 
         {mobileMenuOpen && (
