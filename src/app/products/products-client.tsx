@@ -66,13 +66,9 @@ function FilterBottomSheet({ isOpen, onClose, filters, totalResults }: {
   );
 }
 
-export default function ProductsPage({ searchParams, initialProducts }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }>, initialProducts: Product[] }) {
-  const [resolvedSearchParams, setResolvedSearchParams] = useState<{ [key: string]: string | string[] | undefined }>({});
+export default function ProductsPage({ searchParams, initialProducts }: { searchParams: { [key: string]: string | string[] | undefined }, initialProducts: Product[] }) {
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
-
-  useEffect(() => {
-    searchParams.then(setResolvedSearchParams);
-  }, [searchParams]);
+  const resolvedSearchParams = searchParams;
 
   const filters = buildFilters(new URLSearchParams(resolvedSearchParams as any));
   const allProducts = filterProducts(initialProducts, filters);
