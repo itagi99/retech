@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getCustomerSession } from "@/lib/customer-session";
 import AccountSidebar from "@/components/account/account-sidebar";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function AccountLayout({ children }: { children: React.ReactNode }) {
   const session = await getCustomerSession();

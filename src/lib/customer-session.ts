@@ -1,5 +1,5 @@
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
 
 const SESSION_SECRET = process.env.CUSTOMER_SESSION_SECRET || "retech-customer-secret";
 const SESSION_COOKIE_NAME = "retech-customer-session";
@@ -12,8 +12,17 @@ export interface CustomerSession {
   phone?: string;
 }
 
+function getSecretKey() {
+  return new TextEncoder().encode(SESSION_SECRET);
+}
+
 export async function createCustomerSession(userId: string, email: string, name: string) {
-  const token = jwt.sign({ userId, email, name }, SESSION_SECRET, { expiresIn: "7d" });
+  const token = await new SignJWT({ userId, email, name })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .sign(getSecretKey());
+
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
@@ -29,8 +38,8 @@ export async function getCustomerSession(): Promise<CustomerSession | null> {
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
   try {
-    const decoded = jwt.verify(token, SESSION_SECRET) as CustomerSession;
-    return decoded;
+    const { payload } = await jwtVerify(token, getSecretKey());
+    return payload as unknown as CustomerSession;
   } catch {
     return null;
   }

@@ -49,40 +49,40 @@ export default async function Home() {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-8">
-              <Link href="/" className="text-xl font-bold">
+              <Link href="/" className="text-xl font-bold tracking-tight">
                 ReTech
               </Link>
               <div className="hidden md:flex items-center gap-6">
-                <Link href="/products" className="text-sm font-medium hover:text-primary transition-colors">Shop</Link>
-                <Link href="/products?condition=refurbished" className="text-sm font-medium hover:text-primary transition-colors">Refurbished</Link>
-                <Link href="/products?condition=new" className="text-sm font-medium hover:text-primary transition-colors">New</Link>
-                <Link href="/products?category=gaming" className="text-sm font-medium hover:text-primary transition-colors">Gaming</Link>
-                <Link href="/products?category=business" className="text-sm font-medium hover:text-primary transition-colors">Business</Link>
-                <Link href="/products?category=desktops" className="text-sm font-medium hover:text-primary transition-colors">Desktops</Link>
-                <Link href="/products?category=accessories" className="text-sm font-medium hover:text-primary transition-colors">Accessories</Link>
+                <Link href="/products" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Shop</Link>
+                <Link href="/products?condition=refurbished" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Refurbished</Link>
+                <Link href="/products?condition=new" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">New</Link>
+                <Link href="/products?category=gaming" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Gaming</Link>
+                <Link href="/products?category=business" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Business</Link>
+                <Link href="/products?category=desktops" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Desktops</Link>
+                <Link href="/products?category=accessories" className="text-sm font-medium hover:text-primary transition-all duration-300 hover:scale-105">Accessories</Link>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8" strokeWidth="2" />
                   <path d="M21 21l-4.35-4.35" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </button>
-              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
                 <Heart className="h-5 w-5" />
               </button>
-              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <circle cx="12" cy="7" r="4" strokeWidth="2" />
                 </svg>
               </button>
-              <button className="relative p-2 hover:bg-muted rounded-lg transition-colors">
+              <button className="relative p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
                 <ShoppingCart className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center">0</span>
               </button>
@@ -92,31 +92,53 @@ export default async function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-foreground to-foreground/90 text-background">
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 text-white">
+        <div className="absolute inset-0">
+          <div className="hero-orb w-96 h-96 bg-purple-500/20 top-10 -left-20" />
+          <div className="hero-orb w-80 h-80 bg-blue-500/20 bottom-10 right-10" style={{ animationDelay: "2s" }} />
+          <div className="hero-orb w-64 h-64 bg-pink-500/15 top-1/2 left-1/3" style={{ animationDelay: "4s" }} />
+        </div>
         <div className="absolute inset-0 bg-grid-white/[0.03] bg-[size:60px_60px]" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 lg:py-36">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8 animate-slide-in-left">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur-sm border border-white/10">
+                <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+                Premium Refurbished & New Electronics
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
                 Premium Tech.
                 <br />
-                Smarter Prices.
+                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent animate-gradient">
+                  Smarter Prices.
+                </span>
               </h1>
-              <p className="text-lg sm:text-xl text-white/70 max-w-lg">
+              <p className="text-lg sm:text-xl text-white/60 max-w-lg leading-relaxed">
                 Discover certified refurbished and brand-new electronics with warranty. Tech That Works. Value That Lasts.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/products?condition=refurbished" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-white/90">
-                  Shop Refurbished <ArrowRight className="h-4 w-4" />
+                <Link href="/products?condition=refurbished" className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-semibold text-gray-900 transition-all duration-300 hover:bg-white/90 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105">
+                  Shop Refurbished <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
-                <Link href="/products?condition=new" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-semibold transition-colors hover:bg-white/10">
+                <Link href="/products?condition=new" className="group inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-semibold transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-105 backdrop-blur-sm">
                   Shop New
                 </Link>
               </div>
             </div>
-            <div className="relative">
-              <div className="aspect-square max-w-md mx-auto rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                <Laptop className="h-32 w-32 text-white/30" />
+            <div className="relative animate-slide-in-right">
+              <div className="aspect-square max-w-md mx-auto rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center animate-float animate-pulse-glow">
+                <Laptop className="h-32 w-32 text-white/40" />
+              </div>
+              <div className="absolute -bottom-6 -right-6 glass rounded-2xl px-6 py-4 animate-fade-in" style={{ animationDelay: "0.8s" }}>
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <Star className="h-5 w-5 text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">4.9/5 Rating</p>
+                    <p className="text-xs text-white/50">500+ Happy Customers</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

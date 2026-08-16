@@ -1,29 +1,57 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getSession } from "@/lib/auth";
+import { jwtVerify } from "jose";
+
+const AUTH_SECRET = process.env.AUTH_SECRET || "fallback-secret-key";
+const CUSTOMER_SECRET = process.env.CUSTOMER_SESSION_SECRET || "retech-customer-secret";
+
+const ADMIN_COOKIE = "retech-admin-session";
+const CUSTOMER_COOKIE = "retech-customer-session";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const session = await getSession(request);
 
   const isAdminRoute = pathname.startsWith("/admin") && pathname !== "/admin-login";
   const isCustomerRoute = pathname.startsWith("/account") || pathname.startsWith("/checkout");
   const isAdminLogin = pathname === "/admin-login";
 
   if (isAdminRoute) {
-    if (!session || session.userType !== "admin") {
-      const loginUrl = new URL("/admin-login", request.url);
-      loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
+    const adminToken = request.cookies.get(ADMIN_COOKIE)?.value;
+    if (!adminToken) {
+      return NextResponse.redirect(new URL("/admin-login", request.url));
+    }
+    try {
+      const { payload } = await jwtVerify(adminToken, new TextEncoder().encode(AUTH_SECRET));
+      if (payload.userType !== "admin") {
+        return NextResponse.redirect(new URL("/admin-login", request.url));
+      }
+    } catch {
+      return NextResponse.redirect(new URL("/admin-login", request.url));
     }
   }
 
-  if (isAdminLogin && session?.userType === "admin") {
-    return NextResponse.redirect(new URL("/admin", request.url));
+  if (isAdminLogin) {
+    const adminToken = request.cookies.get(ADMIN_COOKIE)?.value;
+    if (adminToken) {
+      try {
+        const { payload } = await jwtVerify(adminToken, new TextEncoder().encode(AUTH_SECRET));
+        if (payload.userType === "admin") {
+          return NextResponse.redirect(new URL("/admin", request.url));
+        }
+      } catch {}
+    }
   }
 
   if (isCustomerRoute) {
-    if (!session || session.userType !== "customer") {
+    const customerToken = request.cookies.get(CUSTOMER_COOKIE)?.value;
+    if (!customerToken) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    try {
+      await jwtVerify(customerToken, new TextEncoder().encode(CUSTOMER_SECRET));
+    } catch {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
