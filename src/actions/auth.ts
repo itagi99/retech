@@ -36,7 +36,7 @@ export async function loginCustomer(formData: FormData) {
     return { error: "Invalid email or password" };
   }
 
-  createCustomerSession(user.id, user.email, user.name);
+  await createCustomerSession(user.id, user.email, user.name);
   revalidatePath("/");
   revalidatePath("/account");
   return { success: true };

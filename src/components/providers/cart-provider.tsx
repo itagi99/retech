@@ -27,22 +27,25 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("retech-cart");
-      if (stored) {
-        try {
-          return JSON.parse(stored);
-        } catch {}
-      }
-    }
-    return [];
-  });
+  const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("retech-cart", JSON.stringify(items));
-  }, [items]);
+    const stored = localStorage.getItem("retech-cart");
+    if (stored) {
+      try {
+        setItems(JSON.parse(stored));
+      } catch {}
+    }
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (loaded) {
+      localStorage.setItem("retech-cart", JSON.stringify(items));
+    }
+  }, [items, loaded]);
 
   const addItem = (item: Omit<CartItem, "id">) => {
     setItems((prev) => {

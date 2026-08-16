@@ -53,7 +53,7 @@ export async function registerCustomer(formData: FormData) {
 
   await db.insert(wishlists).values({ userId: newUser.id });
 
-  createCustomerSession(newUser.id, newUser.email, newUser.name);
+  await createCustomerSession(newUser.id, newUser.email, newUser.name);
   revalidatePath("/");
   revalidatePath("/account");
   return { success: true };

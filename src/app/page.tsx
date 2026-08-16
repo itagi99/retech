@@ -67,25 +67,24 @@ export default async function Home() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
+              <Link href="/products" className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8" strokeWidth="2" />
                   <path d="M21 21l-4.35-4.35" strokeWidth="2" strokeLinecap="round" />
                 </svg>
-              </button>
-              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
+              </Link>
+              <Link href="/account/wishlist" className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
                 <Heart className="h-5 w-5" />
-              </button>
-              <button className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
+              </Link>
+              <Link href="/account" className="p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <circle cx="12" cy="7" r="4" strokeWidth="2" />
                 </svg>
-              </button>
-              <button className="relative p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
+              </Link>
+              <Link href="/cart" className="relative p-2 hover:bg-muted rounded-lg transition-all duration-300 hover:scale-110">
                 <ShoppingCart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center">0</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>

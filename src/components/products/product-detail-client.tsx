@@ -98,7 +98,7 @@ function Stars({ rating, size = 20 }: { rating: number; size?: number }) {
 }
 
 export default function ProductDetailClient({ product }: { product: ProductData }) {
-  const { addItem } = useCart();
+  const { addItem, setIsOpen } = useCart();
   const [wishlisted, setWishlisted] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -119,6 +119,7 @@ export default function ProductDetailClient({ product }: { product: ProductData 
       quantity,
       slug: product.slug,
     });
+    setIsOpen(true);
   };
 
   const handleBuyNow = () => {
