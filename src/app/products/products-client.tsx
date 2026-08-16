@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Grid3X3, Filter, X, SlidersHorizontal } from "lucide-react";
 import ProductCard from "@/components/products/product-card";
 import FilterSidebar from "@/components/products/filter-sidebar";
@@ -66,36 +66,12 @@ function FilterBottomSheet({ isOpen, onClose, filters, totalResults }: {
   );
 }
 
-export default function ProductsPage({ searchParams, initialProducts }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }>, initialProducts: Product[] }) {
-  const [resolvedSearchParams, setResolvedSearchParams] = useState<{ [key: string]: string | string[] | undefined }>({});
-  const [mounted, setMounted] = useState(false);
-  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (searchParams && typeof searchParams.then === "function") {
-      searchParams.then(setResolvedSearchParams);
-    }
-  }, [searchParams]);
-
-  if (!mounted) {
-    return (
-      <div className="min-h-screen">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">All Products</h1>
-          <p className="text-sm text-muted-foreground">Loading products...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const filters = buildFilters(new URLSearchParams(resolvedSearchParams as any));
+function ProductsContent({ searchParams, initialProducts }: { searchParams: { [key: string]: string | string[] | undefined }, initialProducts: Product[] }) {
+  const filters = buildFilters(new URLSearchParams(searchParams as any));
   const allProducts = filterProducts(initialProducts, filters);
   const totalResults = allProducts.length;
   const hasActiveFilters = Object.values(filters).some((v) => v && v !== "");
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
 
   return (
     <div className="min-h-screen">
@@ -170,4 +146,10 @@ export default function ProductsPage({ searchParams, initialProducts }: { search
       </div>
     </div>
   );
+}
+
+export default function ProductsPage({ searchParams, initialProducts }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }>, initialProducts: Product[] }) {
+  const resolvedSearchParams = use(searchParams);
+  
+  return <ProductsContent searchParams={resolvedSearchParams} initialProducts={initialProducts} />;
 }
