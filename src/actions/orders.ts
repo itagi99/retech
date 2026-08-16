@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
+import { db, isDbAvailable } from "@/lib/db";
 import { orders, orderItems, carts, cartItems, users } from "../../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { getCustomerSession } from "@/lib/customer-session";
@@ -42,6 +42,10 @@ export async function createOrder(formData: FormData) {
   const session = await getCustomerSession();
   if (!session) {
     return { error: "Please log in to place an order" };
+  }
+
+  if (!isDbAvailable()) {
+    return { error: "Database is not configured. Order cannot be placed." };
   }
 
   const shippingAddressJson = formData.get("shippingAddress") as string;
@@ -120,6 +124,10 @@ export async function getUserOrders() {
     return [];
   }
 
+  if (!isDbAvailable()) {
+    return [];
+  }
+
   const userOrders = await db.select().from(orders).where(eq(orders.userId, session.userId)).orderBy(desc(orders.createdAt));
 
   const ordersWithItems = await Promise.all(userOrders.map(async (order) => {
@@ -137,6 +145,10 @@ export async function getUserOrders() {
 export async function getOrder(orderId: string) {
   const session = await getCustomerSession();
   if (!session) {
+    return null;
+  }
+
+  if (!isDbAvailable()) {
     return null;
   }
 

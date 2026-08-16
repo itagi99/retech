@@ -8,6 +8,7 @@ import { useCart } from "@/components/providers/cart-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn, formatPrice, formatPriceFixed } from "@/lib/utils";
+import { isDbAvailable } from "@/lib/db";
 import { createOrder } from "@/actions/orders";
 
 type Step = "information" | "shipping" | "method" | "payment" | "review";
@@ -80,6 +81,12 @@ export default function CheckoutPage() {
   };
 
   const handleSubmit = async () => {
+    if (!isDbAvailable) {
+      alert("Demo mode: Order placed successfully! Database is not configured yet.");
+      router.push("/checkout/success?orderId=demo");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const payload = new FormData();

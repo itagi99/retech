@@ -2,14 +2,23 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/db";
+import { db, isDbAvailable } from "@/lib/db";
 import { wishlists, wishlistItems, products } from "../../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { getCustomerSession } from "@/lib/customer-session";
 
+function dbError(message: string) {
+  console.warn(message);
+  return { error: "Database is not configured. Please set up Turso environment variables." };
+}
+
 export async function getWishlist() {
   const session = await getCustomerSession();
   if (!session) return [];
+
+  if (!isDbAvailable()) {
+    return [];
+  }
 
   const [wishlist] = await db.select().from(wishlists).where(eq(wishlists.userId, session.userId)).limit(1);
   if (!wishlist) return [];
@@ -28,6 +37,10 @@ export async function addToWishlist(productId: string) {
   const session = await getCustomerSession();
   if (!session) return { error: "Please log in to add to wishlist" };
 
+  if (!isDbAvailable()) {
+    return dbError("addToWishlist: database not available");
+  }
+
   const [wishlist] = await db.select().from(wishlists).where(eq(wishlists.userId, session.userId)).limit(1);
   if (!wishlist) return { error: "Wishlist not found" };
 
@@ -45,6 +58,10 @@ export async function addToWishlist(productId: string) {
 export async function removeFromWishlist(productId: string) {
   const session = await getCustomerSession();
   if (!session) return { error: "Please log in" };
+
+  if (!isDbAvailable()) {
+    return dbError("removeFromWishlist: database not available");
+  }
 
   const [wishlist] = await db.select().from(wishlists).where(eq(wishlists.userId, session.userId)).limit(1);
   if (!wishlist) return { error: "Wishlist not found" };

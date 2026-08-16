@@ -20,6 +20,10 @@ export function getDb() {
   return _db;
 }
 
+export function isDbAvailable() {
+  return !!process.env.TURSO_DATABASE_URL;
+}
+
 export const db = new Proxy({} as ReturnType<typeof drizzle>, {
   get(_, prop) {
     const instance = getDb();

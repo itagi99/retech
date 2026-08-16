@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { compare, hash } from "bcryptjs";
-import { db } from "@/lib/db";
+import { db, isDbAvailable } from "@/lib/db";
 import { users } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -29,6 +29,10 @@ export async function updateProfile(formData: FormData) {
   const session = await getCustomerSession();
   if (!session) return { error: "Please log in" };
 
+  if (!isDbAvailable()) {
+    return { error: "Database is not configured. Profile cannot be updated." };
+  }
+
   const raw = {
     name: formData.get("name") as string,
     email: formData.get("email") as string,
@@ -54,6 +58,10 @@ export async function updateProfile(formData: FormData) {
 export async function changePassword(formData: FormData) {
   const session = await getCustomerSession();
   if (!session) return { error: "Please log in" };
+
+  if (!isDbAvailable()) {
+    return { error: "Database is not configured. Password cannot be changed." };
+  }
 
   const raw = {
     currentPassword: formData.get("currentPassword") as string,
