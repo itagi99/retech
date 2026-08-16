@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Toggle, Shield, Bell, Smartphone, Mail, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 export default function AccountSecurityPage() {
