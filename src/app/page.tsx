@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Shield, Truck, RotateCcw, Star, Play, Heart, ShoppingCart, Package, Monitor, Laptop, Gamepad2, Briefcase, Headphones, Quote } from "lucide-react";
 import ProductCard from "@/components/products/product-card";
-import { MOCK_PRODUCTS } from "@/lib/products";
+import { getProducts } from "@/lib/products";
 
 const categories = [
   { name: "Laptops", icon: Laptop, href: "/products?category=laptops" },
@@ -37,9 +37,10 @@ const reviews = [
   { name: "Emily Rodriguez", rating: 4, date: "2 weeks ago", comment: "Great value for money. The gaming laptop performs exceptionally well for the price.", avatar: "ER" },
 ];
 
-export default function Home() {
-  const featured = MOCK_PRODUCTS.filter((p) => p.isFeatured).slice(0, 4);
-  const trending = MOCK_PRODUCTS.filter((p) => p.isTrending).slice(0, 6);
+export default async function Home() {
+  const allProducts = await getProducts();
+  const featured = allProducts.filter((p) => p.isFeatured).slice(0, 4);
+  const trending = allProducts.filter((p) => p.isTrending).slice(0, 6);
 
   return (
     <div className="min-h-screen">

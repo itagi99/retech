@@ -1,3 +1,5 @@
+import { eq } from "drizzle-orm";
+
 export interface Product {
   id: string;
   name: string;
@@ -376,5 +378,128 @@ export function paginateProducts<T>(items: T[], page: number, perPage: number): 
 }
 
 export async function getProducts(): Promise<Product[]> {
-  return MOCK_PRODUCTS;
+  try {
+    const { db } = await import("@/lib/db");
+    const { products: productsTable, categories, brands } = await import("@drizzle/schema");
+
+    const rows = await db.select({
+      id: productsTable.id,
+      name: productsTable.name,
+      slug: productsTable.slug,
+      price: productsTable.price,
+      compareAtPrice: productsTable.compareAtPrice,
+      discountPercent: productsTable.discountPercent,
+      condition: productsTable.condition,
+      rating: productsTable.rating,
+      reviewCount: productsTable.reviewCount,
+      stock: productsTable.stock,
+      warranty: productsTable.warranty,
+      thumbnail: productsTable.thumbnail,
+      videoUrl: productsTable.videoUrl,
+      isFeatured: productsTable.isFeatured,
+      isTrending: productsTable.isTrending,
+      specifications: productsTable.specifications,
+      grade: productsTable.grade,
+      batteryHealth: productsTable.batteryHealth,
+      cosmeticCondition: productsTable.cosmeticCondition,
+      brandName: brands.name,
+      categoryName: categories.name,
+      categorySlug: categories.slug,
+    }).from(productsTable)
+      .leftJoin(brands, eq(productsTable.brandId, brands.id))
+      .leftJoin(categories, eq(productsTable.categoryId, categories.id))
+      .where(eq(productsTable.isActive, true));
+
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      slug: r.slug,
+      price: Number(r.price),
+      compareAtPrice: r.compareAtPrice ? Number(r.compareAtPrice) : null,
+      discountPercent: r.discountPercent,
+      condition: r.condition as Product["condition"],
+      rating: Number(r.rating),
+      reviewCount: r.reviewCount,
+      stock: r.stock,
+      warranty: r.warranty || "",
+      thumbnail: r.thumbnail || "",
+      videoUrl: r.videoUrl,
+      brand: r.brandName || "",
+      category: r.categoryName || "",
+      categorySlug: r.categorySlug || "",
+      isFeatured: r.isFeatured,
+      isTrending: r.isTrending,
+      specifications: (typeof r.specifications === "string" ? JSON.parse(r.specifications) : r.specifications || {}) as Record<string, string>,
+      grade: r.grade || undefined,
+      batteryHealth: r.batteryHealth || undefined,
+      cosmeticCondition: r.cosmeticCondition || undefined,
+    }));
+  } catch {
+    return MOCK_PRODUCTS;
+  }
+}
+
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  try {
+    const { db } = await import("@/lib/db");
+    const { products: productsTable, categories, brands } = await import("@drizzle/schema");
+
+    const [row] = await db.select({
+      id: productsTable.id,
+      name: productsTable.name,
+      slug: productsTable.slug,
+      price: productsTable.price,
+      compareAtPrice: productsTable.compareAtPrice,
+      discountPercent: productsTable.discountPercent,
+      condition: productsTable.condition,
+      rating: productsTable.rating,
+      reviewCount: productsTable.reviewCount,
+      stock: productsTable.stock,
+      warranty: productsTable.warranty,
+      thumbnail: productsTable.thumbnail,
+      videoUrl: productsTable.videoUrl,
+      isFeatured: productsTable.isFeatured,
+      isTrending: productsTable.isTrending,
+      specifications: productsTable.specifications,
+      grade: productsTable.grade,
+      batteryHealth: productsTable.batteryHealth,
+      cosmeticCondition: productsTable.cosmeticCondition,
+      brandName: brands.name,
+      categoryName: categories.name,
+      categorySlug: categories.slug,
+    }).from(productsTable)
+      .leftJoin(brands, eq(productsTable.brandId, brands.id))
+      .leftJoin(categories, eq(productsTable.categoryId, categories.id))
+      .where(eq(productsTable.slug, slug))
+      .limit(1);
+
+    if (!row) return null;
+
+    return {
+      id: row.id,
+      name: row.name,
+      slug: row.slug,
+      price: Number(row.price),
+      compareAtPrice: row.compareAtPrice ? Number(row.compareAtPrice) : null,
+      discountPercent: row.discountPercent,
+      condition: row.condition as Product["condition"],
+      rating: Number(row.rating),
+      reviewCount: row.reviewCount,
+      stock: row.stock,
+      warranty: row.warranty || "",
+      thumbnail: row.thumbnail || "",
+      videoUrl: row.videoUrl,
+      brand: row.brandName || "",
+      category: row.categoryName || "",
+      categorySlug: row.categorySlug || "",
+      isFeatured: row.isFeatured,
+      isTrending: row.isTrending,
+      specifications: (typeof row.specifications === "string" ? JSON.parse(row.specifications) : row.specifications || {}) as Record<string, string>,
+      grade: row.grade || undefined,
+      batteryHealth: row.batteryHealth || undefined,
+      cosmeticCondition: row.cosmeticCondition || undefined,
+    };
+  } catch {
+    return MOCK_PRODUCTS.find((p) => p.slug === slug) || null;
+  }
 }
