@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { Grid3X3, Filter, X, SlidersHorizontal } from "lucide-react";
 import ProductCard from "@/components/products/product-card";
 import FilterSidebar from "@/components/products/filter-sidebar";
@@ -66,12 +66,18 @@ function FilterBottomSheet({ isOpen, onClose, filters, totalResults }: {
   );
 }
 
-function ProductsContent({ searchParams, initialProducts }: { searchParams: { [key: string]: string | string[] | undefined }, initialProducts: Product[] }) {
-  const filters = buildFilters(new URLSearchParams(searchParams as any));
+export default function ProductsPage({ searchParams, initialProducts }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }>, initialProducts: Product[] }) {
+  const [resolvedSearchParams, setResolvedSearchParams] = useState<{ [key: string]: string | string[] | undefined }>({});
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
+
+  useEffect(() => {
+    searchParams.then(setResolvedSearchParams);
+  }, [searchParams]);
+
+  const filters = buildFilters(new URLSearchParams(resolvedSearchParams as any));
   const allProducts = filterProducts(initialProducts, filters);
   const totalResults = allProducts.length;
   const hasActiveFilters = Object.values(filters).some((v) => v && v !== "");
-  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
 
   return (
     <div className="min-h-screen">
@@ -146,10 +152,4 @@ function ProductsContent({ searchParams, initialProducts }: { searchParams: { [k
       </div>
     </div>
   );
-}
-
-export default function ProductsPage({ searchParams, initialProducts }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }>, initialProducts: Product[] }) {
-  const resolvedSearchParams = use(searchParams);
-  
-  return <ProductsContent searchParams={resolvedSearchParams} initialProducts={initialProducts} />;
 }
