@@ -2,6 +2,9 @@ import Link from "next/link";
 import { ArrowRight, Shield, Truck, RotateCcw, Star, Play, Heart, ShoppingCart, Package, Monitor, Laptop, Gamepad2, Briefcase, Headphones, Quote } from "lucide-react";
 import ProductCard from "@/components/products/product-card";
 import { getProducts } from "@/lib/products";
+import { db } from "@/lib/db";
+import { banners } from "@drizzle/schema";
+import { eq } from "drizzle-orm";
 
 const categories = [
   { name: "Laptops", icon: Laptop, href: "/products?category=laptops" },
@@ -41,6 +44,7 @@ export default async function Home() {
   const allProducts = await getProducts();
   const featured = allProducts.filter((p) => p.isFeatured).slice(0, 4);
   const trending = allProducts.filter((p) => p.isTrending).slice(0, 6);
+  const activeBanners = await db.select().from(banners).where(eq(banners.isActive, true)).orderBy(banners.sortOrder);
 
   return (
     <div className="min-h-screen">
@@ -118,6 +122,26 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Banners */}
+      {activeBanners.length > 0 && (
+        <section className="py-8">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-4 md:grid-cols-3">
+              {activeBanners.map((banner) => (
+                <Link key={banner.id} href={banner.link || "/products"} className="group relative overflow-hidden rounded-2xl h-48">
+                  <img src={banner.image} alt={banner.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 p-6">
+                    <h3 className="text-xl font-bold text-white">{banner.title}</h3>
+                    {banner.subtitle && <p className="mt-1 text-sm text-white/80">{banner.subtitle}</p>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Categories */}
       <section className="py-16 lg:py-24">
