@@ -1,15 +1,14 @@
-import AccountSidebar from "@/components/account/account-sidebar";
+import { db } from "@/lib/db";
+import { addresses } from "@drizzle/schema";
+import { eq } from "drizzle-orm";
+import { getCustomerSession } from "@/lib/customer-session";
+import AccountAddressesClient from "@/components/account/addresses-client";
 
-export default function AccountAddressesPage() {
-  return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold">Addresses</h1>
-        <p className="text-sm text-muted-foreground mt-1">Manage your shipping addresses</p>
-      </div>
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">Address management is coming soon.</p>
-      </div>
-    </div>
-  );
+export default async function AccountAddressesPage() {
+  const session = await getCustomerSession();
+  if (!session) return null;
+
+  const userAddresses = await db.select().from(addresses).where(eq(addresses.userId, session.userId)).orderBy(addresses.createdAt);
+
+  return <AccountAddressesClient initialAddresses={userAddresses} />;
 }

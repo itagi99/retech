@@ -120,16 +120,14 @@ export async function getUserOrders() {
     return [];
   }
 
-  const userOrders = await db.select({
-    id: orders.id,
-    orderNumber: orders.orderNumber,
-    status: orders.status,
-    paymentStatus: orders.paymentStatus,
-    total: orders.total,
-    createdAt: orders.createdAt,
-  }).from(orders).where(eq(orders.userId, session.userId)).orderBy(desc(orders.createdAt));
+  const userOrders = await db.select().from(orders).where(eq(orders.userId, session.userId)).orderBy(desc(orders.createdAt));
 
-  return userOrders;
+  const ordersWithItems = await Promise.all(userOrders.map(async (order) => {
+    const items = await db.select().from(orderItems).where(eq(orderItems.orderId, order.id));
+    return { ...order, items };
+  }));
+
+  return ordersWithItems;
 }
 
 export async function getOrder(orderId: string) {
