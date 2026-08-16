@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, AlertCircle } from "lucide-react";
-import { loginCustomer } from "@/actions/auth";
+import { loginCustomer } from "@/actions/login";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -20,19 +20,7 @@ export default function LoginPage() {
           <p className="text-sm text-muted-foreground mt-2">Sign in to your ReTech account</p>
         </div>
 
-        <form
-          action={async (formData) => {
-            setError(null);
-            const result = await loginCustomer(formData);
-            if (result.error) {
-              setError(result.error);
-            } else {
-              router.push("/account");
-              router.refresh();
-            }
-          }}
-          className="space-y-4"
-        >
+        <form action={loginCustomer} className="space-y-4">
           {error && (
             <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
               <AlertCircle className="h-4 w-4 shrink-0" />

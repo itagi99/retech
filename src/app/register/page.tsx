@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, User, Phone, AlertCircle } from "lucide-react";
-import { registerCustomer } from "@/actions/customer";
+import { registerCustomer } from "@/actions/register";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -20,19 +20,7 @@ export default function RegisterPage() {
           <p className="text-sm text-muted-foreground mt-2">Join ReTech for the best deals on electronics</p>
         </div>
 
-        <form
-          action={async (formData) => {
-            setError(null);
-            const result = await registerCustomer(formData);
-            if (result.error) {
-              setError(result.error);
-            } else {
-              router.push("/account");
-              router.refresh();
-            }
-          }}
-          className="space-y-4"
-        >
+        <form action={registerCustomer} className="space-y-4">
           {error && (
             <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
               <AlertCircle className="h-4 w-4 shrink-0" />
@@ -60,7 +48,7 @@ export default function RegisterPage() {
             <label className="text-sm font-medium mb-1.5 block">Phone</label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input type="tel" name="phone" placeholder="+1 234 567 8900" className="pl-10" required />
+              <Input type="tel" name="phone" placeholder="+91 98765 43210" className="pl-10" required />
             </div>
           </div>
 
